@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 
 import * as ImagePicker from 'expo-image-picker';
 
 import Button from './components/Button';
 import ImageViewer from './components/ImageViewer';
+
+const PlaceholderImage = require('./assets/images/cycu.png');
 
 export default function App() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -17,7 +19,7 @@ export default function App() {
     });
 
     if (!result.canceled) {
-      console.log(result);
+      setSelectedImage(result.assets[0].uri);
     } else {
       alert('You did not select any image.');
     }
@@ -25,15 +27,16 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-      <View>
-        <Button theme="primary" label="選擇您的課表" onPress={pickImageAsync} />
+      <View style={styles.imageContainer}>
+        <ImageViewer
+          placeholderImageSource={PlaceholderImage}
+          selectedImage={selectedImage}
+        />
       </View>
-      <ImageViewer
-        placeholderImageSource={PlaceholderImage}
-        selectedImage={selectedImage}
-      />
+      <View style={styles.footerContainer}>
+        <Button theme="primary" label="選擇您的課表" onPress={pickImageAsync} />
+        <Button label="Use this photo" />
+      </View>
       <StatusBar style="auto" />
     </View>
   );
@@ -45,6 +48,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  imageContainer: {
+    flex: 1,
+    paddingTop: 58
+  },
+  image: {
+    width: 320,
+    height: 440,
+    borderRadius: 18
   },
   footerContainer: {
     flex: 1 / 3,
